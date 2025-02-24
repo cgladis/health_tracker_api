@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from models import Activity, Sleep, BloodTest, HealthScoreWeights
+from app.models import Activity, Sleep, BloodTest, HealthScoreWeights
 from sqlalchemy import and_
 
 

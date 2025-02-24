@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, Session
-from models import Base, HealthScoreWeights
+from app.models import Base, HealthScoreWeights
 
 DATABASE_URL = "sqlite:///./health_tracker.db"
 
