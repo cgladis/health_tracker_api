@@ -1,10 +1,18 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, Session
 from app.models import Base, HealthScoreWeights
+from dotenv import load_dotenv
+import os
 
-DATABASE_URL = "sqlite:///./health_tracker.db"
+load_dotenv()
 
-engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+STEPS_WEIGHT = float(os.getenv("DEFAULT_STEPS_WEIGHT"))
+SLEEP_WEIGHT = float(os.getenv("DEFAULT_SLEEP_WEIGHT"))
+GLUCOSE_WEIGHT = float(os.getenv("DEFAULT_GLUCOSE_WEIGHT"))
+
+engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False} if "sqlite" in DATABASE_URL else {})
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base.metadata.create_all(bind=engine)
@@ -15,7 +23,11 @@ def initialize_health_score_weights():
     try:
         weights = db.query(HealthScoreWeights).first()
         if not weights:
-            weights = HealthScoreWeights(steps_weight=0.4, sleep_weight=0.4, glucose_weight=0.2)
+            weights = HealthScoreWeights(
+                steps_weight=STEPS_WEIGHT,
+                sleep_weight=SLEEP_WEIGHT,
+                glucose_weight=GLUCOSE_WEIGHT
+            )
             db.add(weights)
             db.commit()
     finally:
