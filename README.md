@@ -19,6 +19,9 @@ cd health_tracker_api
 # Install dependencies
 pip install -r requirements.txt
 
+# Create a `.env` file with necessary environment variables
+cp .env.example .env
+
 # Start the server
 uvicorn app.main:app --host 0.0.0.0 --port 8000
 ```
@@ -33,8 +36,8 @@ After starting, the API will be available at `http://localhost:8000`
 # Build Docker image
 docker build -t health_tracker_api .
 
-# Run the container
-docker run -p 8000:8000 health_tracker_api
+# Run the container with environment variables
+docker run --env-file .env -p 8000:8000 health_tracker_api
 ```
 
 ## 🚀 API Endpoints
@@ -53,6 +56,8 @@ curl -X GET http://localhost:8000/api/get_health_score/1
     "health_score": 85.4
 }
 ```
+#### Query Parameters:
+- `user_id` (integer) – ID of the user whose health score should be calculated.
 
 ## 🛠 Automation with Makefile
 For convenience, you can use `Makefile`:
@@ -68,7 +73,7 @@ docker-build:
 	docker build -t health_tracker_api .
 
 docker-run:
-	docker run -p 8000:8000 health_tracker_api
+	docker run --env-file .env -p 8000:8000 health_tracker_api
 ```
 
 Now you can run:
@@ -83,6 +88,14 @@ make docker-run  # Run the container
 ```bash
 pytest
 ```
+
+## 📖 Environment Variables
+The API requires some environment variables to be set before running.  
+You can create a `.env` file by copying the example:
+```bash
+cp .env.example .env
+```
+Then update the variables inside `.env`.
 
 ## 📖 Theoretical Questions & Answers
 You can find answers to theoretical questions in [THEORY.md](./THEORY.md).
